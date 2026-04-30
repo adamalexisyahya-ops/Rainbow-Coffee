@@ -5,5 +5,5 @@ const greet = (name) =>{
  const classmates=["Jackie", "Jana", "Yator", "Jake", "Jaydee"];
  classmates.map(name=>greet(name));
  classmates.forEach(name => {
-     console.log(`%c${greet(name)}`, "color: ##8d1ce5; font-weight: bold;");
+     console.log(`%c${greet(name)}`, "color: #8d1ce5; font-weight: bold;");
  });
