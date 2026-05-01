@@ -119,8 +119,8 @@ export default function App() {
 }
 
 const s = StyleSheet.create({
-    screen: {flex:1, backgroundColor: '#d2cdb7', alignItems: 'center', justifyContent: 'center'}, {/*I changed the color of the background*/}
+    screen: {flex:1, backgroundColor: '#d2cdb7', alignItems: 'center', justifyContent: 'center'}, //I added a way to change the background color
     photo: {width: 120, height: 120, borderRadius: 60}, 
-    name: {fontSize: 24, color: '#181818', fontWeight: 'bold', marginTop: 16}, {/*I made it like this so I can change the color of the font*/}
-    bio: {fontSize: 16, color: '#888'}, {/*I also made it like this to change the color of the font*/}
+    name: {fontSize: 24, color: '#181818', fontWeight: 'bold', marginTop: 16}, // I also added a way to change the color of the font
+    bio: {fontSize: 16, color: '#656464'}, // I also added a way to change the color of the font on this part as well
 });
