@@ -100,6 +100,7 @@
 //old code on top
 
 // new code below
+// Date of change: 01/05/2026
 
 import { Image } from 'expo-image';
 import { StyleSheet } from 'react-native';
