@@ -110,17 +110,17 @@ export default function App() {
     <View style={s.screen}>
         <Image
             source={{ uri: 'https://scontent.fdvo1-2.fna.fbcdn.net/v/t39.30808-6/342504767_1296321470970546_34225895670814679_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=1d70fc&_nc_eui2=AeGpC0YaphsTPh6-tG-byLoMXoEDUv1XquRegQNS_Veq5JgIHn0aSCTpTbzHFIS75N2lm2p2JQLnfgJUH5V5ciW1&_nc_ohc=FLW_tWWqFNoQ7kNvwGQM-Gn&_nc_oc=Adq9JONKNAIJV04vNNOQdpqkbcVOkMvbPMKtSdJPNO-999p86SjZvpnKUOA25XG6QL0&_nc_zt=23&_nc_ht=scontent.fdvo1-2.fna&_nc_gid=XyIhybMPxsYpwkvIqRy2bA&_nc_ss=7b2a8&oh=00_Af0-MmlkILvP1IlibXr7ftLoI0r0IOeEjLZGDhnBnWZypg&oe=69F897E6'}}
-            style={s.photo}
+            style={s.photo} 
         />
-        <Text style={s.name}>Adam Alexis Yahya</Text>
-        <Text style={s.bio}>MMA Student • CS126</Text>
+        <Text style={s.name}>Adam Alexis Yahya</Text> {/*I changed it to my name */}
+        <Text style={s.bio}>MMA Student • CS126</Text> {/*I changed it to my bio */}
     </View>
   );
 }
 
 const s = StyleSheet.create({
-    screen: {flex:1, backgroundColor: '#d2cdb7', alignItems: 'center', justifyContent: 'center'},
-    photo: {width: 120, height: 120, borderRadius: 60},
-    name: {fontSize: 24, fontWeight: 'bold', marginTop: 16},
-    bio: {fontSize: 16, color: '#888'},
+    screen: {flex:1, backgroundColor: '#d2cdb7', alignItems: 'center', justifyContent: 'center'}, {/*I changed the color of the background*/}
+    photo: {width: 120, height: 120, borderRadius: 60}, 
+    name: {fontSize: 24, color: '#181818', fontWeight: 'bold', marginTop: 16}, {/*I made it like this so I can change the color of the font*/}
+    bio: {fontSize: 16, color: '#888'}, {/*I also made it like this to change the color of the font*/}
 });
