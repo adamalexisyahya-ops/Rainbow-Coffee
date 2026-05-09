@@ -101,6 +101,7 @@
 
 // new code below
 // Date of change: 01/05/2026
+// Date of change: 09/05/2026 (Lecture Summative)
 
 
 import { useState } from 'react'; //I added useState for the text input
@@ -124,7 +125,7 @@ export default function App() {
         style={{
           height: 40,
           margin: 12,
-          borderwidth: 1,
+          borderWidth: 1,
           padding: 10,
           width: 200,
         }}
