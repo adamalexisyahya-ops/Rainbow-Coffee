@@ -113,7 +113,7 @@ export default function App() {
   return (
     <View style={s.screen}>
         <Image
-            source={{ uri: 'https://scontent.fdvo5-1.fna.fbcdn.net/v/t39.30808-6/342504767_1296321470970546_34225895670814679_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=1d70fc&_nc_eui2=AeGpC0YaphsTPh6-tG-byLoMXoEDUv1XquRegQNS_Veq5JgIHn0aSCTpTbzHFIS75N2lm2p2JQLnfgJUH5V5ciW1&_nc_ohc=Pl5iQ4PGWmMQ7kNvwGgHU1H&_nc_oc=AdrP9ZxF0JKi_V7NzFMsE5mC751TWIT4h8K28AwVT8M6J3Sh5LJMHXUYtj3j6gGMnnk&_nc_zt=23&_nc_ht=scontent.fdvo5-1.fna&_nc_gid=wWXtMpOWEovhRzhzGcjA9w&_nc_ss=7b2a8&oh=00_Af4elzv4F2JDs4nsUEqlnSzKFok_Tt_PzqvntMANJE9g1g&oe=6A04E5E6'}}
+            source={{ uri: 'Fbpic.jpg' }} //I changed the image to my facebook profile picture
             style={s.photo} 
         />
         <Text style={s.name}>Adam Alexis Yahya</Text> {/*I changed it to my name */}
@@ -142,6 +142,6 @@ export default function App() {
 const s = StyleSheet.create({
     screen: {flex:1, backgroundColor: '#d2cdb7', alignItems: 'center', justifyContent: 'center'}, //I added a way to change the background color
     photo: {width: 120, height: 120, borderRadius: 60}, 
-    name: {fontSize: 24, color: '#181818', fontWeight: 'bold', marginTop: 16}, // I also added a way to change the color of the font
+    name: {fontSize: 24, color: '#181818', fontWeight: 'bold', marginTop: 16, fontFamily: 'Bahnschrift'}, // I also added a way to change the color of the font
     bio: {fontSize: 16, color: '#656464'}, // I also added a way to change the color of the font on this part as well
 });
