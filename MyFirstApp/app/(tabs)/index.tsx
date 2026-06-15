@@ -100,6 +100,9 @@ const menuItems = [
   { id: '3', category: 'Hot Drinks',  name: 'Latte',       price: '₱160', desc: 'Smooth espresso blended with creamy steamed milk.' },
   { id: '4', category: 'Cold Drinks', name: 'Iced Coffee', price: '₱130', desc: 'Chilled brewed coffee served over ice for a refreshing kick.' },
   { id: '5', category: 'Cold Drinks', name: 'Frappuccino', price: '₱175', desc: 'Blended iced coffee drink topped with whipped cream.' },
+  { id: '6', category: 'Dessert', name: 'Brownie', price: '₱35', desc: 'Blended iced coffee drink topped with whipped cream.' },
+  { id: '7', category: 'Dessert', name: 'Donut', price: '₱50', desc: 'Blended iced coffee drink topped with whipped cream.' },
+  { id: '8', category: 'Dessert', name: 'Slice of Cake', price: '₱220', desc: 'Blended iced coffee drink topped with whipped cream.' },
 ];
 
 // ─── Stack Navigator Setup ───────────────────────────────────────────────────
@@ -174,7 +177,7 @@ export default function App() {
         }}
       >
         {/* Register our two screens with the Stack */}
-        <Stack.Screen name="Menu"   component={HomeScreen}   options={{ title: '☕ Coffee Shop'}} />
+        <Stack.Screen name="Menu"   component={HomeScreen}   options={{ title: '☕ Rainbow Coffee'}} />
         <Stack.Screen name="Detail" component={DetailScreen} options={{ title: 'Coffee Details', headerLeft: () => null }} />
       </Stack.Navigator>
     </NavigationIndependentTree>
