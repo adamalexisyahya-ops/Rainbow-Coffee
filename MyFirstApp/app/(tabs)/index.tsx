@@ -1,81 +1,87 @@
-// Date of change: 16/05/2026 (M1 Lab Summative)
+// Rainbow Coffee — Menu Screen
+// This is the main menu page. It shows a list of coffee and food items.
+// Tapping any item opens a detail page with a bigger image and description.
 
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// ─── Coffee Menu Data ────────────────────────────────────────────────────────
+// ─── Menu Items ───────────────────────────────────────────────────────────────
+// This is the list of all products on the menu.
+// TIP: In a real app this data would come from the internet (an API or database).
+// For now it's written here directly — which is perfectly fine for learning!
 const menuItems = [
-  { 
-    id: '1', 
-    category: 'Hot Drinks',  
-    name: 'Americano',   
-    price: '₱120', 
+  {
+    id: '1',
+    category: 'Hot Drinks',
+    name: 'Americano',
+    price: '₱120',
     desc: 'Bold and strong black coffee brewed with espresso shots.',
     image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=400&q=80'
   },
-  { 
-    id: '2', 
-    category: 'Hot Drinks',  
-    name: 'Cappuccino',  
-    price: '₱150', 
+  {
+    id: '2',
+    category: 'Hot Drinks',
+    name: 'Cappuccino',
+    price: '₱150',
     desc: 'Classic Italian coffee with equal parts espresso, steamed milk, and foam.',
     image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=400&q=80'
   },
-  { 
-    id: '3', 
-    category: 'Hot Drinks',  
-    name: 'Latte',       
-    price: '₱160', 
+  {
+    id: '3',
+    category: 'Hot Drinks',
+    name: 'Latte',
+    price: '₱160',
     desc: 'Smooth espresso blended with creamy steamed milk.',
     image: 'https://images.unsplash.com/photo-1593443320739-77f74939d0da?q=80&w=736&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
   },
-  { 
-    id: '4', 
-    category: 'Cold Drinks', 
-    name: 'Iced Coffee', 
-    price: '₱130', 
+  {
+    id: '4',
+    category: 'Cold Drinks',
+    name: 'Iced Coffee',
+    price: '₱130',
     desc: 'Chilled brewed coffee served over ice for a refreshing kick.',
     image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
   },
-  { 
-    id: '5', 
-    category: 'Cold Drinks', 
-    name: 'Frappuccino', 
-    price: '₱175', 
+  {
+    id: '5',
+    category: 'Cold Drinks',
+    name: 'Frappuccino',
+    price: '₱175',
     desc: 'Blended iced coffee drink topped with whipped cream.',
     image: 'https://images.unsplash.com/photo-1627998691167-4dab0dfcae9f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
   },
-  { 
-    id: '6', 
-    category: 'Dessert', 
-    name: 'Brownie', 
-    price: '₱35', 
+  {
+    id: '6',
+    category: 'Dessert',
+    name: 'Brownie',
+    price: '₱35',
     desc: 'Rich, fudgy chocolate square baked to perfection.',
     image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=400&q=80'
   },
-  { 
-    id: '7', 
-    category: 'Dessert', 
-    name: 'Donut', 
-    price: '₱50', 
+  {
+    id: '7',
+    category: 'Dessert',
+    name: 'Donut',
+    price: '₱50',
     desc: 'Soft and fluffy glazed pastry ring.',
     image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=400&q=80'
   },
-  { 
-    id: '8', 
-    category: 'Dessert', 
-    name: 'Slice of Cake', 
-    price: '₱220', 
+  {
+    id: '8',
+    category: 'Dessert',
+    name: 'Slice of Cake',
+    price: '₱220',
     desc: 'Decadent multi-layered dessert with sweet frosting.',
     image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80'
   },
 ];
 
-// ─── Stack Navigator Setup ───────────────────────────────────────────────────
 const Stack = createNativeStackNavigator();
 
-// ─── Home Screen (Coffee Menu) ───────────────────────────────────────────────
+// ─── Menu List Screen ─────────────────────────────────────────────────────────
+// Shows all menu items as a scrollable list.
+// When the user taps an item, it navigates to the Detail screen and passes that item's data.
 function HomeScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
@@ -91,11 +97,15 @@ function HomeScreen({ navigation }: any) {
             onPress={() => navigation.navigate('Detail', { coffee: item })}
           >
             <Image source={{ uri: item.image }} style={styles.thumbnail} />
-            
+
             <View style={styles.itemTextContainer}>
               <Text style={styles.category}>{item.category}</Text>
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.price}>{item.price}</Text>
+
+              {/* TODO [FAVORITES]: Add a heart button (♡ / ♥) next to each item.
+                  - When tapped, save this item as a favorite to the phone's storage.
+                  - Show a filled heart if it's already saved, empty if it's not. */}
             </View>
           </TouchableOpacity>
         )}
@@ -104,7 +114,9 @@ function HomeScreen({ navigation }: any) {
   );
 }
 
-// ─── Detail Screen ───────────────────────────────────────────────────────────
+// ─── Item Detail Screen ───────────────────────────────────────────────────────
+// Shows the full info of the item the user tapped.
+// The item's data is passed in from the Menu screen (via route.params.coffee).
 function DetailScreen({ route, navigation }: any) {
   const { coffee } = route.params;
 
@@ -117,6 +129,14 @@ function DetailScreen({ route, navigation }: any) {
       <Text style={styles.detailPrice}>{coffee.price}</Text>
       <Text style={styles.detailDesc}>{coffee.desc}</Text>
 
+      {/* TODO [ADD TO CART]: Add an "Add to Cart" button here.
+          - When tapped, save this item to the phone's storage.
+          - The Cart screen will load those saved items and show them. */}
+
+      {/* TODO [FAVORITES]: Add a "Add to Favorites" heart button here.
+          - When tapped, save this item to the phone's storage as a favorite.
+          - Show a filled heart ♥ if already saved, empty ♡ if not. */}
+
       <TouchableOpacity
         style={styles.backButton}
         activeOpacity={0.8}
@@ -128,7 +148,9 @@ function DetailScreen({ route, navigation }: any) {
   );
 }
 
-// ─── App (Navigation Container) ─────────────────────────────────────────────
+// ─── Tab Entry Point ──────────────────────────────────────────────────────────
+// NavigationIndependentTree gives the Menu tab its own navigation history
+// so going to the Detail screen doesn't affect the Cart or Profile tabs.
 export default function App() {
   return (
     <NavigationIndependentTree>
@@ -146,9 +168,14 @@ export default function App() {
   );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────────────────
+// ─── Styles ───────────────────────────────────────────────────────────────────
+// TIP: Colors like '#3E1F00' and '#FDF6EE' are repeated across multiple files.
+// Try saving them as variables at the top so they're easy to reuse and update.
+// Example:  const BROWN = '#3E1F00';
+//           const CREAM = '#FDF6EE';
 const styles = StyleSheet.create({
-  // Home Screen
+
+  // ── Menu List ──
   container: {
     flex: 1,
     padding: 20,
@@ -171,17 +198,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 6,
     elevation: 2,
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   thumbnail: {
     width: 70,
     height: 100,
     borderRadius: 8,
-    marginRight: 16, 
+    marginRight: 16,
   },
   itemTextContainer: {
-    flex: 1, 
+    flex: 1,
   },
   category: {
     fontSize: 12,
@@ -201,7 +228,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  // Detail Screen
+  // ── Item Detail ──
   detailContainer: {
     flex: 1,
     padding: 28,

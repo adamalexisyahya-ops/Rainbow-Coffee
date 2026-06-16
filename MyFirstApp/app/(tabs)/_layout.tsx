@@ -1,25 +1,31 @@
+// Rainbow Coffee — Tab Bar
+// This sets up the three tabs at the bottom of the screen: Menu, Cart, and Profile.
+
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons'; //for the icons???
-//import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
 
-//import { HapticTab } from '@/components/haptic-tab';
-//import { IconSymbol } from '@/components/ui/icon-symbol';
-//import { Colors } from '@/constants/theme';
-//import { useColorScheme } from '@/hooks/use-color-scheme';
-
+// ─── Tab Navigator ────────────────────────────────────────────────────────────
+// screenOptions sets the look of the tab bar for every tab:
+//   tabBarActiveTintColor   — icon/text color when the tab is selected
+//   tabBarInactiveTintColor — icon/text color when the tab is not selected
+//   tabBarStyle             — background color of the tab bar
+//   headerShown: false      — hides the top header bar (each screen has its own)
+//
+// TIP: All three tabs currently use the same icon — change each one so they
+// look different from each other:
+//   Menu    → "cafe-outline"
+//   Cart    → "cart-outline"
+//   Profile → "person-outline"
 export default function TabLayout() {
-  //const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#3E1F00',
         tabBarInactiveTintColor: '#a8a8a8',
-        tabBarStyle: { backgroundColor: '#d2cdb7'},
+        tabBarStyle: { backgroundColor: '#d2cdb7' },
         headerShown: false,
       }}
     >
-
       <Tabs.Screen
         name="index"
         options={{
@@ -33,6 +39,7 @@ export default function TabLayout() {
         name="cart"
         options={{
           title: 'Cart',
+          // TIP: Change "cafe-outline" to "cart-outline" for a cart icon.
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="cafe-outline" size={size} color={color} />
           ),
@@ -42,6 +49,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
+          // TIP: Change "cafe-outline" to "person-outline" for a profile icon.
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="cafe-outline" size={size} color={color} />
           ),

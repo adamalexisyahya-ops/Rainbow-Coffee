@@ -1,38 +1,26 @@
-import React, { useState, useEffect } from 'react';
+// Rainbow Coffee — Cart Screen
+// This is the shopping cart. It shows what the user wants to order
+// and lets them go to the Order Summary before checking out.
+
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
 // ─── Cart Screen ─────────────────────────────────────────────────────────────
+// This screen shows the user's cart.
+// Right now it only has a button — the next step is to show the actual items.
 function CartScreen({ navigation }: any) {
-  const [note, setNote] = useState('');
-  const [saved, setSaved] = useState<{ note: string; time: string } | null>(null);
-
-  useEffect(() => {
-    loadNote();
-  }, []);
-
-  async function loadNote() {
-    const raw = await AsyncStorage.getItem('orderNote');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      setSaved(parsed);
-    }
-  }
-
-  async function saveNote() {
-    const order = { note: note, time: new Date().toLocaleTimeString() };
-    await AsyncStorage.setItem('orderNote', JSON.stringify(order));
-    setSaved(order);
-    setNote('');
-  }
-  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🛒 Cart Screen</Text>
+
+      {/* TODO [ADD CART]: Show the items the user added from the Menu.
+          - When the user taps "Add to Cart" on a menu item, save it to the phone's storage.
+          - Load those saved items here and display them as a list.
+          - Add a remove button for each item.
+          - Show the total price at the bottom. */}
 
       <TouchableOpacity
         style={styles.button}
@@ -45,10 +33,17 @@ function CartScreen({ navigation }: any) {
 }
 
 // ─── Order Summary Screen ─────────────────────────────────────────────────────
+// This screen shows a final look at the order before the user confirms it.
 function OrderSummaryScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>📋 Order Summary</Text>
+
+      {/* TODO [VIEW ALL ORDERS]: Show the full order breakdown here.
+          - List each item, its quantity, and price.
+          - Show the grand total at the bottom.
+          - Add a "Place Order" button that saves the order and clears the cart.
+          - TIP: You can also show past orders in the Profile screen later. */}
 
       <TouchableOpacity
         style={styles.button}
@@ -60,9 +55,9 @@ function OrderSummaryScreen({ navigation }: any) {
   );
 }
 
-// ─── App ─────────────────────────────────────────────────────────────────────
-// NavigationIndependentTree isolates this stack from the one in index.tsx.
-// Both tabs have their own stack — they do not share or interfere with each other.
+// ─── Tab Entry Point ──────────────────────────────────────────────────────────
+// NavigationIndependentTree gives the Cart tab its own navigation history
+// so it doesn't get mixed up with the Menu or Profile tabs.
 export default function App() {
   return (
     <NavigationIndependentTree>
@@ -80,7 +75,9 @@ export default function App() {
   );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────────────────
+// ─── Styles ───────────────────────────────────────────────────────────────────
+// TIP: The purple color (#49109a) doesn't match the brown coffee theme
+// used in the other screens. Try changing it to '#3E1F00' to keep it consistent.
 const styles = StyleSheet.create({
   container: {
     flex: 1,
