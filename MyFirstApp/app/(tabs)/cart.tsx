@@ -112,17 +112,38 @@
 // });
 // old code on top which is explore tab
 
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// ─── Stack Navigator Setup ───────────────────────────────────────────────────
-// This is a SECOND independent stack — separate from the one in index.tsx.
-// Each tab has its own stack, and NavigationIndependentTree keeps them isolated.
 const Stack = createNativeStackNavigator();
 
 // ─── Cart Screen ─────────────────────────────────────────────────────────────
 function CartScreen({ navigation }: any) {
+  const [note, setNote] = useState('');
+  const [saved, setSaved] = useState<{ note: string; time: string } | null>(null);
+
+  useEffect(() => {
+    loadNote();
+  }, []);
+
+  async function loadNote() {
+    const raw = await AsyncStorage.getItem('orderNote');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      setSaved(parsed);
+    }
+  }
+
+  async function saveNote() {
+    const order = { note: note, time: new Date().toLocaleTimeString() };
+    await AsyncStorage.setItem('orderNote', JSON.stringify(order));
+    setSaved(order);
+    setNote('');
+  }
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🛒 Cart Screen</Text>
