@@ -1,6 +1,6 @@
 // Rainbow Coffee — Menu Screen
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert, ActivityIndicator, Animated } from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,6 +13,9 @@ const CARD_BG = '#FFF8F2';
 
 const Stack = createNativeStackNavigator();
 
+// Global Notification Helper State/Component setup inside the layout
+let showToastGlobal: (message: string) => void = () => {};
+
 // ─── Menu List Screen ─────────────────────────────────────────────────────────
 function HomeScreen({ navigation }: any) {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -21,25 +24,24 @@ function HomeScreen({ navigation }: any) {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch menu from internet using fetch() and async/await
-const fetchMenu = async () => {
-  try {
-    setLoading(true);
-    setError(null);
-    
-    // CHANGE THIS LINE to use a reliable public test API:
-    const response = await fetch('https://raw.githubusercontent.com/adamalexisyahya-ops/Rainbow-Coffee/main/menu.json');
-    
-    if (!response.ok) {
-      throw new Error('Could not retrieve menu data');
+  const fetchMenu = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch('https://raw.githubusercontent.com/adamalexisyahya-ops/Rainbow-Coffee/main/menu.json');
+      
+      if (!response.ok) {
+        throw new Error('Could not retrieve menu data');
+      }
+      const data = await response.json();
+      setMenuItems(data);
+    } catch (err: any) {
+      setError('No internet connection or server error. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    const data = await response.json();
-    setMenuItems(data);
-  } catch (err: any) {
-    setError('No internet connection or server error. Please try again.');
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   // Initial load & Load favorites
   useEffect(() => {
@@ -67,7 +69,6 @@ const fetchMenu = async () => {
     await AsyncStorage.setItem('user_favorites', JSON.stringify(updatedFavs));
   };
 
-  // 1. Loading Spinner State
   if (loading) {
     return (
       <View style={[styles.container, styles.center]}>
@@ -77,7 +78,6 @@ const fetchMenu = async () => {
     );
   }
 
-  // 2. Error Message State
   if (error) {
     return (
       <View style={[styles.container, styles.center, { paddingHorizontal: 30 }]}>
@@ -163,7 +163,9 @@ function DetailScreen({ route, navigation }: any) {
       }
 
       await AsyncStorage.setItem('cart_items', JSON.stringify(currentCart));
-      Alert.alert("Added to Cart!", `${coffee.name} has been added to your shopping bag.`);
+      
+      // Trigger our new floating toast notification!
+      showToastGlobal(`🛍️ Added ${coffee.name} to cart!`);
     } catch (error) {
       console.error("Failed to add item to cart:", error);
     }
@@ -218,19 +220,53 @@ function DetailScreen({ route, navigation }: any) {
   );
 }
 
+// ─── Main App Wrapper with Floating Toast Notification ────────────────────────
 export default function App() {
+  const [toastMessage, setToastMessage] = useState('');
+  const [fadeAnim] = useState(new Animated.Value(0));
+
+  // Expose toast activation globally to child screens
+  showToastGlobal = (message: string) => {
+    setToastMessage(message);
+    
+    // Fade In
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      // Hold for 2 seconds, then Fade Out
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => setToastMessage(''));
+      }, 2000);
+    });
+  };
+
   return (
     <NavigationIndependentTree>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: BROWN },
-          headerTintColor: '#F5E6D3',
-          headerTitleStyle: { fontWeight: 'bold' },
-        }}
-      >
-        <Stack.Screen name="Menu"   component={HomeScreen}   options={{ title: '☕ Rainbow Coffee'}} />
-        <Stack.Screen name="Detail" component={DetailScreen} options={{ title: 'Coffee Details', headerLeft: () => null }} />
-      </Stack.Navigator>
+      <View style={{ flex: 1 }}>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: BROWN },
+            headerTintColor: '#F5E6D3',
+            headerTitleStyle: { fontWeight: 'bold' },
+          }}
+        >
+          <Stack.Screen name="Menu"   component={HomeScreen}   options={{ title: '☕ Rainbow Coffee'}} />
+          <Stack.Screen name="Detail" component={DetailScreen} options={{ title: 'Coffee Details', headerLeft: () => null }} />
+        </Stack.Navigator>
+
+        {/* Floating Notification Toast UI */}
+        {toastMessage ? (
+          <Animated.View style={[styles.toastNotification, { opacity: fadeAnim }]}>
+            <Text style={styles.toastText}>{toastMessage}</Text>
+          </Animated.View>
+        ) : null}
+      </View>
     </NavigationIndependentTree>
   );
 }
@@ -276,5 +312,30 @@ const styles = StyleSheet.create({
   backButtonText: { color: CREAM, fontSize: 16, fontWeight: '600' },
   errorText: { color: 'red', fontSize: 16, textAlign: 'center', fontWeight: '500', marginBottom: 15 },
   retryButton: { backgroundColor: BROWN, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 6 },
-  retryButtonText: { color: CREAM, fontWeight: 'bold' }
+  retryButtonText: { color: CREAM, fontWeight: 'bold' },
+  
+  // Custom Toast Banner Styles
+  toastNotification: {
+    position: 'absolute',
+    bottom: 50,
+    left: '10%',
+    right: '10%',
+    backgroundColor: '#004d26', // Deep green theme color
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 }
+  },
+  toastText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 14,
+    textAlign: 'center'
+  }
 });
