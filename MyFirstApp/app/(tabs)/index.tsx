@@ -27,7 +27,7 @@ const fetchMenu = async () => {
     setError(null);
     
     // CHANGE THIS LINE to use a reliable public test API:
-    const response = await fetch('https://github.com/adamalexisyahya-ops/Rainbow-Coffee-2.0.git');
+    const response = await fetch('https://raw.githubusercontent.com/adamalexisyahya-ops/Rainbow-Coffee/main/menu.js');
     
     if (!response.ok) {
       throw new Error('Could not retrieve menu data');

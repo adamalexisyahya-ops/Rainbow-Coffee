@@ -22,5 +22,45 @@
     "price": "160",
     "desc": "Smooth espresso blended with creamy steamed milk.",
     "image": "https://images.unsplash.com/photo-1593443320739-77f74939d0da?q=80&w=736&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  }
+  },
+  {
+    "id": "4",
+    "category": "Cold Drinks",
+    "name": "Iced Coffee",
+    "price": "130",
+    "desc": "Chilled brewed coffee served over ice for a refreshing kick.",
+    "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  },
+  {
+    "id": "5",
+    "category": "Cold Drinks",
+    "name": "Frappuccino",
+    "price": "175",
+    "desc": "Blended iced coffee drink topped with whipped cream.",
+    "image": "https://images.unsplash.com/photo-1627998691167-4dab0dfcae9f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  },
+  {
+    "id": "6",
+    "category": "Dessert",
+    "name": "Brownie",
+    "price": "35",
+    "desc": "Rich, fudgy chocolate square baked to perfection.",
+    "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "id": "7",
+    "category": "Dessert",
+    "name": "Donut",
+    "price": "50",
+    "desc": "Soft and fluffy glazed pastry ring.",
+    "image": "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "id": "8",
+    "category": "Dessert",
+    "name": "Slice of Cake",
+    "price": "220",
+    "desc": "Decadent multi-layered dessert with sweet frosting.",
+    "image": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80"
+  },
 ]
