@@ -1,88 +1,94 @@
 // Rainbow Coffee — Menu Screen
-// This is the main menu page. It shows a list of coffee and food items.
-// Tapping any item opens a detail page with a bigger image and description.
-
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// ─── Menu Items ───────────────────────────────────────────────────────────────
-// This is the list of all products on the menu.
-// TIP: In a real app this data would come from the internet (an API or database).
-// For now it's written here directly — which is perfectly fine for learning!
-const menuItems = [
-  {
-    id: '1',
-    category: 'Hot Drinks',
-    name: 'Americano',
-    price: '₱120',
-    desc: 'Bold and strong black coffee brewed with espresso shots.',
-    image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: '2',
-    category: 'Hot Drinks',
-    name: 'Cappuccino',
-    price: '₱150',
-    desc: 'Classic Italian coffee with equal parts espresso, steamed milk, and foam.',
-    image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: '3',
-    category: 'Hot Drinks',
-    name: 'Latte',
-    price: '₱160',
-    desc: 'Smooth espresso blended with creamy steamed milk.',
-    image: 'https://images.unsplash.com/photo-1593443320739-77f74939d0da?q=80&w=736&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-  },
-  {
-    id: '4',
-    category: 'Cold Drinks',
-    name: 'Iced Coffee',
-    price: '₱130',
-    desc: 'Chilled brewed coffee served over ice for a refreshing kick.',
-    image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-  },
-  {
-    id: '5',
-    category: 'Cold Drinks',
-    name: 'Frappuccino',
-    price: '₱175',
-    desc: 'Blended iced coffee drink topped with whipped cream.',
-    image: 'https://images.unsplash.com/photo-1627998691167-4dab0dfcae9f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-  },
-  {
-    id: '6',
-    category: 'Dessert',
-    name: 'Brownie',
-    price: '₱35',
-    desc: 'Rich, fudgy chocolate square baked to perfection.',
-    image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: '7',
-    category: 'Dessert',
-    name: 'Donut',
-    price: '₱50',
-    desc: 'Soft and fluffy glazed pastry ring.',
-    image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: '8',
-    category: 'Dessert',
-    name: 'Slice of Cake',
-    price: '₱220',
-    desc: 'Decadent multi-layered dessert with sweet frosting.',
-    image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80'
-  },
-];
+// ─── Theme Constants ──────────────────────────────────────────────────────────
+const BROWN = '#3E1F00';
+const CREAM = '#FDF6EE';
+const ACCENT_ORANGE = '#C1440E';
+const CARD_BG = '#FFF8F2';
 
 const Stack = createNativeStackNavigator();
 
 // ─── Menu List Screen ─────────────────────────────────────────────────────────
-// Shows all menu items as a scrollable list.
-// When the user taps an item, it navigates to the Detail screen and passes that item's data.
 function HomeScreen({ navigation }: any) {
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch menu from internet using fetch() and async/await
+const fetchMenu = async () => {
+  try {
+    setLoading(true);
+    setError(null);
+    
+    // CHANGE THIS LINE to use a reliable public test API:
+    const response = await fetch('https://github.com/adamalexisyahya-ops/Rainbow-Coffee-2.0.git');
+    
+    if (!response.ok) {
+      throw new Error('Could not retrieve menu data');
+    }
+    const data = await response.json();
+    setMenuItems(data);
+  } catch (err: any) {
+    setError('No internet connection or server error. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // Initial load & Load favorites
+  useEffect(() => {
+    fetchMenu();
+
+    const loadFavorites = async () => {
+      const storedFavs = await AsyncStorage.getItem('user_favorites');
+      if (storedFavs) setFavorites(JSON.parse(storedFavs));
+    };
+
+    const unsubscribe = navigation.addListener('focus', loadFavorites);
+    loadFavorites();
+    return unsubscribe;
+  }, [navigation]);
+
+  // Toggle favorite inclusion status
+  const handleToggleFavorite = async (itemId: string) => {
+    let updatedFavs = [...favorites];
+    if (updatedFavs.includes(itemId)) {
+      updatedFavs = updatedFavs.filter(id => id !== itemId);
+    } else {
+      updatedFavs.push(itemId);
+    }
+    setFavorites(updatedFavs);
+    await AsyncStorage.setItem('user_favorites', JSON.stringify(updatedFavs));
+  };
+
+  // 1. Loading Spinner State
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.center]}>
+        <ActivityIndicator size="large" color={BROWN} />
+        <Text style={{ marginTop: 12, color: BROWN, fontWeight: '600' }}>Loading Rainbow Menu...</Text>
+      </View>
+    );
+  }
+
+  // 2. Error Message State
+  if (error) {
+    return (
+      <View style={[styles.container, styles.center, { paddingHorizontal: 30 }]}>
+        <Text style={styles.errorText}>⚠️ {error}</Text>
+        <TouchableOpacity style={styles.retryButton} onPress={fetchMenu}>
+          <Text style={styles.retryButtonText}>Try Again</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>☕ Coffee Shop Menu</Text>
@@ -90,52 +96,116 @@ function HomeScreen({ navigation }: any) {
       <FlatList
         data={menuItems}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            activeOpacity={0.75}
-            onPress={() => navigation.navigate('Detail', { coffee: item })}
-          >
-            <Image source={{ uri: item.image }} style={styles.thumbnail} />
+        renderItem={({ item }) => {
+          const isFavorite = favorites.includes(item.id);
+          return (
+            <TouchableOpacity
+              style={styles.item}
+              activeOpacity={0.75}
+              onPress={() => navigation.navigate('Detail', { coffee: item })}
+            >
+              <Image source={{ uri: item.image }} style={styles.thumbnail} />
 
-            <View style={styles.itemTextContainer}>
-              <Text style={styles.category}>{item.category}</Text>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.price}>{item.price}</Text>
+              <View style={styles.itemTextContainer}>
+                <Text style={styles.category}>{item.category}</Text>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.price}>₱{item.price}</Text>
+              </View>
 
-              {/* TODO [FAVORITES]: Add a heart button (♡ / ♥) next to each item.
-                  - When tapped, save this item as a favorite to the phone's storage.
-                  - Show a filled heart if it's already saved, empty if it's not. */}
-            </View>
-          </TouchableOpacity>
-        )}
+              <TouchableOpacity 
+                style={styles.favoriteListButton} 
+                onPress={() => handleToggleFavorite(item.id)}
+              >
+                <Text style={[styles.heartIcon, isFavorite && styles.activeHeart]}>
+                  {isFavorite ? '♥' : '♡'}
+                </Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          );
+        }}
       />
     </View>
   );
 }
 
 // ─── Item Detail Screen ───────────────────────────────────────────────────────
-// Shows the full info of the item the user tapped.
-// The item's data is passed in from the Menu screen (via route.params.coffee).
 function DetailScreen({ route, navigation }: any) {
   const { coffee } = route.params;
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const checkFavoriteStatus = async () => {
+      const storedFavs = await AsyncStorage.getItem('user_favorites');
+      if (storedFavs) {
+        const favsArray = JSON.parse(storedFavs);
+        setIsFavorite(favsArray.includes(coffee.id));
+      }
+    };
+    checkFavoriteStatus();
+  }, [coffee.id]);
+
+  const handleAddToCart = async () => {
+    try {
+      const existingCartString = await AsyncStorage.getItem('cart_items');
+      let currentCart = existingCartString ? JSON.parse(existingCartString) : [];
+
+      const itemIndex = currentCart.findIndex((item: any) => item.id === coffee.id);
+      if (itemIndex > -1) {
+        currentCart[itemIndex].quantity += 1;
+      } else {
+        currentCart.push({
+          id: coffee.id,
+          name: coffee.name,
+          price: `₱${coffee.price}`,
+          quantity: 1,
+          image: coffee.image
+        });
+      }
+
+      await AsyncStorage.setItem('cart_items', JSON.stringify(currentCart));
+      Alert.alert("Added to Cart!", `${coffee.name} has been added to your shopping bag.`);
+    } catch (error) {
+      console.error("Failed to add item to cart:", error);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    const storedFavs = await AsyncStorage.getItem('user_favorites');
+    let favsArray = storedFavs ? JSON.parse(storedFavs) : [];
+
+    if (favsArray.includes(coffee.id)) {
+      favsArray = favsArray.filter((id: string) => id !== coffee.id);
+      setIsFavorite(false);
+    } else {
+      favsArray.push(coffee.id);
+      setIsFavorite(true);
+    }
+    await AsyncStorage.setItem('user_favorites', JSON.stringify(favsArray));
+  };
 
   return (
     <View style={styles.detailContainer}>
       <Image source={{ uri: coffee.image }} style={styles.detailImage} />
 
-      <Text style={styles.detailCategory}>{coffee.category}</Text>
-      <Text style={styles.detailName}>{coffee.name}</Text>
-      <Text style={styles.detailPrice}>{coffee.price}</Text>
+      <View style={styles.detailHeaderRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.detailCategory}>{coffee.category}</Text>
+          <Text style={styles.detailName}>{coffee.name}</Text>
+        </View>
+        
+        <TouchableOpacity style={styles.favoriteDetailButton} onPress={handleToggleFavorite}>
+          <Text style={[styles.detailHeartIcon, isFavorite && styles.activeHeart]}>
+            {isFavorite ? '♥' : '♡'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.detailPrice}>₱{coffee.price}</Text>
       <Text style={styles.detailDesc}>{coffee.desc}</Text>
 
-      {/* TODO [ADD TO CART]: Add an "Add to Cart" button here.
-          - When tapped, save this item to the phone's storage.
-          - The Cart screen will load those saved items and show them. */}
-
-      {/* TODO [FAVORITES]: Add a "Add to Favorites" heart button here.
-          - When tapped, save this item to the phone's storage as a favorite.
-          - Show a filled heart ♥ if already saved, empty ♡ if not. */}
+      <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart} activeOpacity={0.85}>
+        <Text style={styles.addToCartButtonText}>Add to Cart 🛒</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.backButton}
@@ -148,15 +218,12 @@ function DetailScreen({ route, navigation }: any) {
   );
 }
 
-// ─── Tab Entry Point ──────────────────────────────────────────────────────────
-// NavigationIndependentTree gives the Menu tab its own navigation history
-// so going to the Detail screen doesn't affect the Cart or Profile tabs.
 export default function App() {
   return (
     <NavigationIndependentTree>
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: '#3E1F00' },
+          headerStyle: { backgroundColor: BROWN },
           headerTintColor: '#F5E6D3',
           headerTitleStyle: { fontWeight: 'bold' },
         }}
@@ -168,32 +235,17 @@ export default function App() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
-// TIP: Colors like '#3E1F00' and '#FDF6EE' are repeated across multiple files.
-// Try saving them as variables at the top so they're easy to reuse and update.
-// Example:  const BROWN = '#3E1F00';
-//           const CREAM = '#FDF6EE';
 const styles = StyleSheet.create({
-
-  // ── Menu List ──
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#FDF6EE',
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#3E1F00',
-  },
+  container: { flex: 1, padding: 20, backgroundColor: CREAM },
+  center: { justifyContent: 'center', alignItems: 'center' },
+  heading: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, color: BROWN },
   item: {
-    backgroundColor: '#FFF8F2',
+    backgroundColor: CARD_BG,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderLeftWidth: 4,
-    borderLeftColor: '#560ec1',
+    borderLeftColor: BROWN,
     shadowColor: '#000',
     shadowOpacity: 0.06,
     shadowRadius: 6,
@@ -201,83 +253,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  thumbnail: {
-    width: 70,
-    height: 100,
-    borderRadius: 8,
-    marginRight: 16,
-  },
-  itemTextContainer: {
-    flex: 1,
-  },
-  category: {
-    fontSize: 12,
-    color: '#6c6b6b',
-    marginBottom: 4,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#3E1F00',
-  },
-  price: {
-    fontSize: 14,
-    color: '#C1440E',
-    marginTop: 4,
-  },
-
-  // ── Item Detail ──
-  detailContainer: {
-    flex: 1,
-    padding: 28,
-    backgroundColor: '#FDF6EE',
-    justifyContent: 'center',
-  },
-  detailImage: {
-    width: 240,
-    height: 340,
-    borderRadius: 16,
-    alignSelf: 'center',
-    marginBottom: 24,
-    resizeMode: 'cover',
-  },
-  detailCategory: {
-    fontSize: 13,
-    color: '#888',
-    textTransform: 'uppercase',
-    letterSpacing: 1.5,
-    marginBottom: 8,
-  },
-  detailName: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#3E1F00',
-    marginBottom: 8,
-  },
-  detailPrice: {
-    fontSize: 22,
-    color: '#C1440E',
-    fontWeight: '600',
-    marginBottom: 20,
-  },
-  detailDesc: {
-    fontSize: 16,
-    color: '#555',
-    lineHeight: 24,
-    marginBottom: 40,
-  },
-  backButton: {
-    backgroundColor: '#3E1F00',
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  backButtonText: {
-    color: '#FDF6EE',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  thumbnail: { width: 70, height: 100, borderRadius: 8, marginRight: 16 },
+  itemTextContainer: { flex: 1 },
+  category: { fontSize: 12, color: '#6c6b6b', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 },
+  name: { fontSize: 18, fontWeight: '600', color: BROWN },
+  price: { fontSize: 14, color: ACCENT_ORANGE, marginTop: 4 },
+  favoriteListButton: { padding: 10 },
+  heartIcon: { fontSize: 26, color: '#aaa' },
+  detailHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
+  favoriteDetailButton: { padding: 8, backgroundColor: CARD_BG, borderRadius: 30, elevation: 2 },
+  detailHeartIcon: { fontSize: 30, color: '#aaa' },
+  activeHeart: { color: '#E03B3B' },
+  detailContainer: { flex: 1, padding: 28, backgroundColor: CREAM, justifyContent: 'center' },
+  detailImage: { width: 240, height: 340, borderRadius: 16, alignSelf: 'center', marginBottom: 24, resizeMode: 'cover' },
+  detailCategory: { fontSize: 13, color: '#888', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 4 },
+  detailName: { fontSize: 32, fontWeight: 'bold', color: BROWN },
+  detailPrice: { fontSize: 22, color: ACCENT_ORANGE, fontWeight: '600', marginBottom: 16 },
+  detailDesc: { fontSize: 16, color: '#555', lineHeight: 24, marginBottom: 30 },
+  addToCartButton: { backgroundColor: ACCENT_ORANGE, paddingVertical: 14, borderRadius: 10, alignItems: 'center', marginBottom: 12 },
+  addToCartButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  backButton: { backgroundColor: BROWN, paddingVertical: 14, paddingHorizontal: 28, borderRadius: 10, alignItems: 'center' },
+  backButtonText: { color: CREAM, fontSize: 16, fontWeight: '600' },
+  errorText: { color: 'red', fontSize: 16, textAlign: 'center', fontWeight: '500', marginBottom: 15 },
+  retryButton: { backgroundColor: BROWN, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 6 },
+  retryButtonText: { color: CREAM, fontWeight: 'bold' }
 });

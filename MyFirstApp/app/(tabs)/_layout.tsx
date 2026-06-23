@@ -41,7 +41,7 @@ export default function TabLayout() {
           title: 'Cart',
           // TIP: Change "cafe-outline" to "cart-outline" for a cart icon.
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cafe-outline" size={size} color={color} />
+            <Ionicons name="cart-outline" size={size} color={color} />
           ),
         }}
       />
@@ -51,7 +51,7 @@ export default function TabLayout() {
           title: 'Profile',
           // TIP: Change "cafe-outline" to "person-outline" for a profile icon.
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cafe-outline" size={size} color={color} />
+            <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
       />
