@@ -107,11 +107,39 @@ export default function CartApp() {
   };
 
   const handlePlaceOrder = async () => {
-    Alert.alert("Success", "🎉 Order placed successfully!");
-    await AsyncStorage.removeItem('cart_items');
-    setCartItems([]);
-    setCurrentView('Cart'); 
-  };
+      try {
+        if (cartItems.length === 0) return;
+
+        const orderDate = new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+        const orderTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        const newOrder = {
+          id: Date.now().toString(),
+          date: `${orderDate} at ${orderTime}`,
+          items: cartItems.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: parsePrice(item.price)
+          })),
+          total: calculateTotal()
+        };
+
+        // Fetch past orders and prepend the latest order
+        const existingHistoryStr = await AsyncStorage.getItem('@order_history');
+        const existingHistory = existingHistoryStr ? JSON.parse(existingHistoryStr) : [];
+        const updatedHistory = [newOrder, ...existingHistory];
+
+        await AsyncStorage.setItem('@order_history', JSON.stringify(updatedHistory));
+
+        Alert.alert("Success", "🎉 Order placed successfully!");
+        await AsyncStorage.removeItem('cart_items');
+        setCartItems([]);
+        setCurrentView('Cart'); 
+      } catch (e) {
+        console.error("Error saving order history: ", e);
+        Alert.alert("Error", "Could not complete your checkout history save.");
+      }
+    };
 
   // ─── Network Status Sub-Views ──────────────────────────────────────────────
   if (loading) {
@@ -279,7 +307,7 @@ const styles = StyleSheet.create({
   savedNoteLabel: { fontSize: 11, fontWeight: 'bold', color: '#004d26' },
   savedNoteText: { fontSize: 15, color: '#222', marginVertical: 3, fontWeight: '500' },
   timestampText: { fontSize: 11, color: '#777' },
-  clearNoteButton: { backgroundColor: '#ff4444', paddingVertical: 8, borderRadius: 5, alignItems: 'center' },
+  clearNoteButton: { backgroundColor: '#960808', paddingVertical: 8, borderRadius: 5, alignItems: 'center' },
   clearNoteButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 13 },
   errorText: { color: 'red', fontSize: 16, textAlign: 'center', fontWeight: '500', marginBottom: 15 },
   retryButton: { backgroundColor: '#3E1F00', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 6 },

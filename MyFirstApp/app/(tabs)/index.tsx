@@ -256,7 +256,7 @@ export default function App() {
             headerTitleStyle: { fontWeight: 'bold' },
           }}
         >
-          <Stack.Screen name="Menu"   component={HomeScreen}   options={{ title: '☕ Rainbow Coffee'}} />
+          <Stack.Screen name="Menu"   component={HomeScreen}   options={{ title: '☕ Mescomesto Coffee'}} />
           <Stack.Screen name="Detail" component={DetailScreen} options={{ title: 'Coffee Details', headerLeft: () => null }} />
         </Stack.Navigator>
 
