@@ -97,11 +97,11 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', paddingTop: 40, backgroundColor: '#FDF6EE' },
   center: { justifyContent: 'center', alignItems: 'center' },
-  avatar: { fontSize: 64, marginBottom: 12 },
+  avatar: { fontSize: 64, marginBottom: 12, marginTop:70 },
   inputHeaderLabel: { fontSize: 11, fontWeight: 'bold', color: '#888', alignSelf: 'flex-start', marginLeft: '10%', marginBottom: 4 },
   nameInput: { width: '80%', backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 10, fontSize: 16, color: '#3E1F00', fontWeight: 'bold', textAlign: 'center', marginBottom: 10 },
   saveProfileBtn: { backgroundColor: '#3E1F00', width: '80%', paddingVertical: 10, borderRadius: 6, alignItems: 'center', marginBottom: 20 },
-  saveBtnText: { color: '#FDF6EE', fontWeight: 'bold' },
+  saveBtnText: { color: '#f2e5ab', fontWeight: 'bold' },
   email: { fontSize: 14, color: '#666', fontStyle: 'italic', marginBottom: 24 },
   card: { width: '80%', backgroundColor: '#FFF8F2', padding: 16, borderRadius: 8, flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, borderWidth: 1, borderColor: '#E6D7C3' },
   label: { fontSize: 14, color: '#555', fontWeight: '500' },

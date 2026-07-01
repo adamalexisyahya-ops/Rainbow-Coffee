@@ -168,7 +168,7 @@ export default function CartApp() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#777', width: '90%', marginBottom: 20 }]}
+          style={[styles.button, { backgroundColor: '#3E1F00', width: '90%', marginBottom: 20 }]}
           onPress={() => setCurrentView('Cart')}
         >
           <Text style={styles.buttonText}>← Back to Cart</Text>
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   customHeaderTitle: { color: '#F5F5F5', fontSize: 18, fontWeight: 'bold' },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 15, color: '#3E1F00' },
   button: { backgroundColor: '#3E1F00', paddingVertical: 12, borderRadius: 8, alignItems: 'center' },
-  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  buttonText: { color: '#FDF6EE', fontSize: 16, fontWeight: 'bold' },
   cartItem: { flexDirection: 'row', backgroundColor: '#FFF8F2', padding: 12, borderRadius: 10, marginBottom: 10, alignItems: 'center', elevation: 1 },
   cartThumbnail: { width: 50, height: 50, borderRadius: 6, marginRight: 12 },
   itemName: { fontSize: 16, fontWeight: '600', color: '#3E1F00' },
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   instructionContainer: { width: '90%', marginBottom: 15 },
   instructionLabel: { fontSize: 11, fontWeight: 'bold', color: '#555', marginBottom: 4 },
   inputField: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 5, color: '#3E1F00', marginBottom: 8 },
-  saveNoteButton: { backgroundColor: '#004d26', paddingVertical: 12, borderRadius: 5, alignItems: 'center', marginBottom: 10 },
+  saveNoteButton: { backgroundColor: '#396535', paddingVertical: 12, borderRadius: 5, alignItems: 'center', marginBottom: 10 },
   saveNoteButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
   displayNoteBox: { backgroundColor: '#eef9f3', padding: 12, borderRadius: 5, borderWidth: 1, borderColor: '#d0ebd9', marginBottom: 5 },
   savedNoteLabel: { fontSize: 11, fontWeight: 'bold', color: '#004d26' },

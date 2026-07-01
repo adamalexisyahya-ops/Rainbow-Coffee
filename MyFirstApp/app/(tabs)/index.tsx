@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     bottom: 50,
     left: '10%',
     right: '10%',
-    backgroundColor: '#004d26', // Deep green theme color
+    backgroundColor: '#004d0c', // Deep green theme color
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
